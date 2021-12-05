@@ -15,8 +15,31 @@ class Card extends React.Component {
   }
 
   render() {
-    let { i, x, y, rot, scale, trans, cards, bind, objs } = this.props;
-    let { name, age, distance, text, pics, website, directions } = objs[i];
+
+    
+    let { i, x, y, rot, scale, trans, cards, bind, objs, origin } = this.props;
+    if (objs.length != 0){
+      console.log('made it');
+    let { name, price, distance, image_url, url, rating, location, categories} = objs[i];
+    rating = rating.toFixed(1)
+
+    let new_name = name.replace(/ /g, '+');
+    
+    let destination = new_name + "+" + location['city'] + location['state']
+
+    let google_url = 'https://www.google.com/maps/dir/?api=1&origin=' + origin + '&destination=' + destination
+    
+    let dist = distance * 0.000621371192;
+    dist = dist.toFixed(2)
+    let tags = ''
+
+    categories.forEach((item, idx, categories) => {
+      tags += item['title']
+      if (idx != categories.length - 1){
+       tags += ', '
+      }
+    })
+   
 
     return (
       <animated.div
@@ -35,19 +58,22 @@ class Card extends React.Component {
           }}
         >
           <div className="card">
+            
+            
             <Carousel>
-              {pics.map(pic => (
-                <img src={pic} alt="profilePicture" />
-              ))}
+              
+                <img src={image_url} alt="profilePicture" />
+              
             </Carousel>
-            <h2>{name},</h2>
-            <h2>{age}</h2>
-            <h5>{distance}</h5>
-            <h5>{text}</h5>
-            <a href={directions}>
+            <h3>{rating}⭐️</h3>
+            <h2>{name}, {price}</h2>
+            <h5>{dist} miles away | {location['address1']}</h5>
+            <h4>{tags}</h4>
+            
+            <a href={google_url}>
               <button class="button">📍 Directions </button>
             </a>
-            <a href={website}>
+            <a href={url}>
               <button class="button">🌐 Website </button>
             </a>
             
@@ -58,6 +84,11 @@ class Card extends React.Component {
       </animated.div>
     );
   }
+  else {
+    return null;
+  }
+}
 }
 
 export default Card;
+

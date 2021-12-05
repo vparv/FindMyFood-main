@@ -6,59 +6,11 @@ import axios from 'axios'
 
 import "../styles/Deck.css";
 
-let objs = [
-  {
-    pics: [
-"https://s3-media0.fl.yelpcdn.com/bphoto/Kax_19qwZS5tAHhxs5WUsQ/o.jpg"    ],
-    name: "Isalita",
-    age: "$$",
-    distance: "0.2 miles away",
-    text: "Mexican standards served in a rustic space with a festive streetside patio."
-  },
-  {
-    pics: [
-"https://media-cdn.tripadvisor.com/media/photo-s/13/d5/67/50/ramen.jpg"    ],
-    name: "Tomukun Noodle Bar",
-    age: "$$",
-    distance: "0.3 miles away",
-    text:
-      "Upmarket noodle house dishes up udon, ramen & Pan-Asian mains."
-  },
-  {
-    pics: [
-      "https://www.piperpartners.com/wp/wp-content/uploads/2014/11/13888662292_08b713c255_b.jpg", 
-      "https://fastly.4sqi.net/img/general/600x600/1853578_lAQ5RpWr01ca3wfev9z74WwoYGryQWXKpU80JamBA7U.jpg"],
-    name: "Neopapalis",
-    age: "$",
-    distance: "0 miles away",
-    text: "Sleek spot for fired-to-order Neapolitan pizzas with fully customizable toppings."
-  },
-  {
-    pics: [
-      "https://advancelocal-adapter-image-uploads.s3.amazonaws.com/expo.advance.net/img/71f1072188/width2048/d69_117.jpeg", 
-      "https://i0.wp.com/www.michigandaily.com/wp-content/uploads/2019/10/eaa.BOAA_.Fritas0015.jpg?fit=720%2C480&ssl=1"
-    ],
-    name: "Frita Batidos",
-    age: "$$",
-    distance: "0.5 miles away",
-    text:
-      "Picnic table seating serves colorful cuban street food & tropical cocktails.",
-    website: "www.google.com",
-    directions: "www.yahoo.com"
-  },
-  {
-    pics: [
-      "https://www.zingermanscreamery.com/app/uploads/2019/09/Screen-Shot-2019-09-05-at-5.57.54-PM.png"
-    ],
-    name: "Zingerman's Deli",
-    age: "$$",
-    distance: "0.8 miles away",
-    text:
-      "Locals line up for generous deli sandwiches at this funky, longtime market.",
-    website: "https://www.google.com",
-    directions: "https://www.yahoo.com"
-  }
-];
+let objs = []
+
+let origin = '401 Thompson St, Ann Arbor, MI'
+origin=origin.replace(/ /g,"+");
+origin=origin.replace(/,/g,"+");
 
 const to = i => ({
   x: 0,
@@ -76,6 +28,8 @@ const trans = (r, s) =>
 function Deck() {
   let [gone] = useState(() => new Set());
 
+  let [objs, setObjs] = useState([])
+
   let [cards, setCards] = useState([1,2,3,4,5])
 
   let [liked] = useState(() => new Set());
@@ -91,7 +45,7 @@ const [restaurant, setRestaurant] = useState([])
 const [results] = useState(() => new Set());
 let content = null
 // const restaurants = []
-const upper_limit = 5
+const upper_limit = 15
 
 
 let liked_res = []
@@ -103,7 +57,7 @@ useEffect(() => {
      },
      params: {
          'radius': '8000',
-         'location': '401 Thompson Street, Ann Arbor, MI'
+         'location': origin
      }
      })
      .then((res) => {
@@ -119,8 +73,9 @@ useEffect(() => {
      console.log(results)
      const array = [...results]
      console.log(array)
-     // objs = array
-     //console.log('obj', objs)
+     objs = array
+     console.log('obj', objs)
+     setObjs(array)
      
      })
      .catch((err) => {
@@ -207,7 +162,7 @@ useEffect(() => {
   );
 
   return props.map(({ x, y, rot, scale}, i) => (
-    <Card
+    <Card 
       i={i}
       x={x}
       y={y}
@@ -217,6 +172,7 @@ useEffect(() => {
       cards={cards}
       objs={objs}
       bind={bind}
+      origin={origin}
     />
   ));
 }
